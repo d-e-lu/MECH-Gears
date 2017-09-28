@@ -9,7 +9,20 @@ public class TextReader {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		       System.out.println(line);
+		       String[] powerScrews = line.split("\\s");
+		       if(!powerScrews[0].endsWith("\""))
+		       {
+		    	   System.out.print(powerScrews[0] + " " + powerScrews[1]);
+		    	   System.out.print(" " + powerScrews[3] + " " + powerScrews[4]);
+		    	   System.out.println(" " + powerScrews[powerScrews.length - 1]);
+		       }
+		       else{
+		    	   System.out.print(powerScrews[0]);
+		    	   System.out.print(" " + powerScrews[2] + " " + powerScrews[3]);
+		    	   System.out.println(" " + powerScrews[powerScrews.length - 1]);
+		       }
+		       
+		      
 		    }
 		}
 	}

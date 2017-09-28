@@ -11,10 +11,6 @@ public class VelocityOptimizer{
 	private static int iterations = 8; // search iterations
 	private static double maxVelocity = 0; // max velocity found in search
 	
-	
-	/*
-	 * 
-	 */
 	public static PowerScrew calculateMaxVelocity(double maxDiameter, double maxThreadAngle, double minGearRatio, double maxGearRatio, int searchSpaceLength)
 	{	
 		double[] diameter = getSearchSpace(0, .025, searchSpaceLength);
