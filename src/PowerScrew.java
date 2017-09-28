@@ -6,14 +6,32 @@ public class PowerScrew {
 	private double gearRato;
 	private double velocity;
 	
+	private Double cost;
+	
 	public PowerScrew(double d, double tAngle, double gRatio, double velocity)
+	{
+		this(d, tAngle, gRatio, velocity, null);
+	}
+	public PowerScrew(double d, double tAngle, double gRatio, double velocity, Double cost)
 	{
 		this.diameter = d;
 		this.threadAngle = tAngle;
 		this.gearRato = gRatio;
 		this.velocity = velocity;
+		this.cost = cost;
 	}
 	
+	public double costEfficiency()
+	{
+		if(cost == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return this.velocity/this.cost;
+		}
+	}
 	
 	private static double powerScrewEfficiency(double threadAngle, double friction)
 	{

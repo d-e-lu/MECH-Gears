@@ -4,8 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class TextReader {
-	public static void readFile(String file) throws FileNotFoundException, IOException
+	public static PowerScrew FindClosestScrew(String file, PowerScrew optimalPowerScrew) throws FileNotFoundException, IOException
 	{
+		PowerScrew closestPowerScrew = null;
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
@@ -21,9 +22,10 @@ public class TextReader {
 		    	   System.out.print(" " + powerScrews[2] + " " + powerScrews[3]);
 		    	   System.out.println(" " + powerScrews[powerScrews.length - 1]);
 		       }
-		       
 		      
 		    }
 		}
+		
+		return closestPowerScrew;
 	}
 }
