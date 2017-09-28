@@ -11,11 +11,15 @@ public class VelocityOptimizer{
 	private static int iterations = 8; // search iterations
 	private static double maxVelocity = 0; // max velocity found in search
 	
-	public static void main(String[] args)
+	
+	/*
+	 * 
+	 */
+	public static PowerScrew calculateMaxVelocity(double maxDiameter, double maxThreadAngle, double minGearRatio, double maxGearRatio, int searchSpaceLength)
 	{	
-		double[] diameter = getSearchSpace(0, .025, 100);
-		double[] threadAngle = getSearchSpace(0, Math.PI/36, 100);
-		double[] gearRatio = getSearchSpace(0.1, 6, 100);
+		double[] diameter = getSearchSpace(0, .025, searchSpaceLength);
+		double[] threadAngle = getSearchSpace(0, Math.PI/36, searchSpaceLength);
+		double[] gearRatio = getSearchSpace(0.1, 6, searchSpaceLength);
 		
 		
 		int[] searchSpaceIndexes = new int[3];
@@ -43,7 +47,10 @@ public class VelocityOptimizer{
 			threadAngle = getSearchSpace(threadAngle[Math.max(0, searchSpaceIndexes[1] - 1)],threadAngle[Math.min(threadAngle.length - 1, searchSpaceIndexes[1] + 1)], threadAngle.length);
 			gearRatio = getSearchSpace(gearRatio[Math.max(0, searchSpaceIndexes[2] - 1)],gearRatio[Math.min(gearRatio.length - 1, searchSpaceIndexes[2] + 1)], gearRatio.length);
 		}
+		
 		printCalculations(diameter, threadAngle, gearRatio, searchSpaceIndexes, maxVelocity);
+		
+		return new PowerScrew(diameter[searchSpaceIndexes[0]], threadAngle[searchSpaceIndexes[1]], gearRatio[searchSpaceIndexes[2]], maxVelocity);
 	}
 	
 	private static double calculateAllToVelocity(double diameter, double threadAngle, double gearRatio)
@@ -94,48 +101,10 @@ public class VelocityOptimizer{
 	private static void printCalculations(double[] diameter, double[] threadAngle, double[] gearRatio, int[] searchSpaceIndexes, double maxVelocity)
 	{
 		System.out.println("Diameter: " + diameter[searchSpaceIndexes[0]] + " (m)");
-		System.out.println("Thread Angle: " + (threadAngle[searchSpaceIndexes[1]] * 180/Math.PI) + " (degrees)");
+		System.out.println("Thread Angle: " + (threadAngle[searchSpaceIndexes[1]] * 180.0/Math.PI) + " (degrees)");
 		System.out.println("Gear Ratio: " + gearRatio[searchSpaceIndexes[2]]);
 		System.out.println("Max Velocity: " + maxVelocity * 1000 + " (mm/s)");
 	}
-	
-	private static double powerScrewEfficiency(double threadAngle)
-	{
-		double tanAngle = Math.tan(threadAngle);
-		
-		return tanAngle * (1 - (friction * tanAngle)) / (tanAngle + friction);
-	}
-	
-	private static double nominalShearStress(double torque, double diameter)
-	{
-		return 16 * torque / (Math.PI * Math.pow(diameter, 3));
-	}
-	
-	private static double transverseShearStress(double force, double diameter, int engagedThreads, double pitch)
-	{
-		return 3 * force / (Math.PI * diameter * engagedThreads * pitch);
-	}
-	
-	private static double nominalNormalStress(double force, double diameter)
-	{
-		return 4 * force / (Math.PI * Math.pow(diameter, 2));
-	}
-	
-	private static double bendingNormalStress(double force, double diameter, int engagedThreads, double pitch)
-	{
-		return 6 * force / (Math.PI * diameter * engagedThreads * pitch);
-	}
-	
-	private static double inchesTomm(double inches)
-	{
-		return inches * 25.4;
-	}
-	
-	private static double mmToInches(double mm)
-	{
-		return mm / 25.4;
-	}
-	
 	
 }
 
