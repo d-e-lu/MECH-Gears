@@ -1,7 +1,7 @@
 
 public class VelocityOptimizer{
 
-	private static double friction = 0.1; // usually around 0.1 - 0.25
+	private static double friction = 0.25; // usually around 0.1 - 0.25
 	private static double rps = 2500.0/60.0; // revolutions per second
 	private static double motorTorque = 2.5; // N*m
 	private static double minTorqueRatio = 1.2; // ratio of T_L / T_0
@@ -9,14 +9,18 @@ public class VelocityOptimizer{
 	private static double rpsC = rps * Math.PI; // revolutions per second * pi
 	private static double forceConst = 12500 * Math.PI; // used for calculations with force
 	private static int iterations = 8; // search iterations
+	private static double acmeConst = 1/Math.cos(14.5*Math.PI/180);
 	private static double maxVelocity = 0; // max velocity found in search
+	
 	
 	public static PowerScrew calculateMaxVelocity(double maxDiameter, double maxThreadAngle, double minGearRatio, double maxGearRatio, int searchSpaceLength)
 	{	
-		double[] diameter = getSearchSpace(0, .025, searchSpaceLength);
-		double[] threadAngle = getSearchSpace(0, Math.PI/36, searchSpaceLength);
-		double[] gearRatio = getSearchSpace(0.1, 6, searchSpaceLength);
 		
+		double[] diameter = getSearchSpace(0.01143, 0.01143, 1);
+		double[] threadAngle = getSearchSpace(4.0461 * Math.PI / 180, 4.0461 * Math.PI / 180, 1);
+		double[] gearRatio = getSearchSpace(0, 10, searchSpaceLength);
+		
+		//Minimum Velocity needed = 25.4mm/sec
 		
 		int[] searchSpaceIndexes = new int[3];
 		
@@ -49,7 +53,12 @@ public class VelocityOptimizer{
 		return new PowerScrew(diameter[searchSpaceIndexes[0]], threadAngle[searchSpaceIndexes[1]], gearRatio[searchSpaceIndexes[2]], maxVelocity);
 	}
 	
-	private static double calculateAllToVelocity(double diameter, double threadAngle, double gearRatio)
+	public static double calculateVelocityFromPowerScrew(PowerScrew powerScrew)
+	{
+		return calculateAllToVelocity(powerScrew.getDiameter(), powerScrew.getThreadAngle(), powerScrew.getGearRatio());
+	}
+	
+	public static double calculateAllToVelocity(double diameter, double threadAngle, double gearRatio)
 	{
 		double velocity = getVelocity(diameter, threadAngle, gearRatio);
 		double force = getForce(velocity);
@@ -80,8 +89,10 @@ public class VelocityOptimizer{
 	
 	private static double getMinTorqueNeeded(double diameter, double threadAngle, double force)
 	{
-		return (friction - Math.tan(threadAngle)) * (force * diameter / 2)/(1+friction * Math.tan(threadAngle));
-
+		//return (friction - Math.tan(threadAngle)) * (force * diameter / 2)/(1+friction * Math.tan(threadAngle));
+		//acme
+		//return (friction*acmeConst - Math.tan(threadAngle)) * (force * diameter / 2)/(1+friction * Math.tan(threadAngle)*acmeConst);
+		return (friction*acmeConst + Math.tan(threadAngle)) * (force * diameter / 2)/(1-friction * Math.tan(threadAngle)*acmeConst);
 	}
 	
 	private static double[] getSearchSpace(double min, double max, int length)
