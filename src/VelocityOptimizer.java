@@ -4,7 +4,7 @@ public class VelocityOptimizer{
 	private static double friction = 0.25; // usually around 0.1 - 0.25
 	private static double rps = 2500.0/60.0; // revolutions per second
 	private static double motorTorque = 2.5; // N*m
-	private static double minTorqueRatio = 1.2; // ratio of T_L / T_0
+	private static double minTorqueRatio = 1; // ratio of T_L / T_0
 	
 	private static double rpsC = rps * Math.PI; // revolutions per second * pi
 	private static double forceConst = 12500 * Math.PI; // used for calculations with force
@@ -16,9 +16,9 @@ public class VelocityOptimizer{
 	public static PowerScrew calculateMaxVelocity(double maxDiameter, double maxThreadAngle, double minGearRatio, double maxGearRatio, int searchSpaceLength)
 	{	
 		
-		double[] diameter = getSearchSpace(0.01143, 0.01143, 1);
-		double[] threadAngle = getSearchSpace(4.0461 * Math.PI / 180, 4.0461 * Math.PI / 180, 1);
-		double[] gearRatio = getSearchSpace(0, 10, searchSpaceLength);
+		double[] diameter = getSearchSpace(0.009525, 0.009525, 1);
+		double[] threadAngle = getSearchSpace(6.05 * Math.PI / 180, 6.05 * Math.PI / 180, 1);
+		double[] gearRatio = getSearchSpace(2, 2, 100);
 		
 		//Minimum Velocity needed = 25.4mm/sec
 		
